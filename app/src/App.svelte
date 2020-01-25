@@ -16,9 +16,10 @@
 				diagnosis: d.primary_dx
 			};
 		}).then((res) => {
-			data = d3.nest()
-							.key((d) => d.individual)
-							.entries(res);
+			let tmp = d3.nest()
+								.key((d) => d.individual)
+								.entries(res);
+			data = tmp.sort((a, b) => a.values[0].age > b.values[0].age);
 		});
 	}
 
