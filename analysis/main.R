@@ -41,7 +41,7 @@ median_plot_data %>%
 
 # the median plot with NA diagnoses only
 data %>%
-  filter(is.na(primary_dx)) %>%
+  filter(is.na(primary_dx) | primary_dx == "Z00") %>%
   group_by(ANON_ID) %>%
   summarise(median_temp_C = median(temp_C, na.rm = TRUE),
             median_weight = median(weight_KG, na.rm = TRUE),
