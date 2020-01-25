@@ -2,6 +2,7 @@
 	import * as d3 from 'd3';
 
 	import { width, height } from './stores.js';
+	import Defs from './components/Defs.svelte';
 	import Individual from './components/Individual.svelte';
 
 	let data = [];
@@ -40,7 +41,7 @@
 </script>
 
 <div class="wrapper">
-	<h1>Human body temperatures</h1>
+	<h1>Same same but different</h1>
 	<div class="explanations">
 		It was the German physician Carl Reinhold August Wunderlich, who measured the temperatures of 25,000 patients leading to the gold standard 37 degrees. The average human body temperature. Until today we believe that this is true.
 		In early 2020 a comprehensive study with temperature data points spanning the last 150 years appeared in the scientific journal <a href="https://elifesciences.org/articles/49555">eLife</a>. Surprisingly, average body temperatures are falling over past decades. The authors speculate that one reason might be less infections.<br />
@@ -50,6 +51,7 @@
 		<svg xmlns="http://www.w3.org/2000/svg"
 				 width={$width}
 				 height={$height}>
+			<Defs />
 			{#each data as individual, i}
 				<Individual x={individualRowScale(i)}
 										y={Math.random() * $width / 10}
