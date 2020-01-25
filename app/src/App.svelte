@@ -19,7 +19,7 @@
 			let tmp = d3.nest()
 								.key((d) => d.individual)
 								.entries(res);
-			data = tmp.sort((a, b) => a.values[0].age > b.values[0].age);
+			data = tmp.sort((a, b) => a.values[0].age > b.values[0].age ? 1 : -1);
 		});
 	}
 

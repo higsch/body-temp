@@ -47,6 +47,8 @@
     .y((d) => tempScale(d.temp))
     .curve(d3.curveBundle.beta(1));
 
+  $: maxAge = d3.max(data.map((d) => d.age));
+  $: minAge = d3.min(data.map((d) => d.age));
   $: maxTemp = d3.max(data.map((d) => d.temp));
   $: minTemp = d3.min(data.map((d) => d.temp));
 </script>
@@ -67,9 +69,9 @@
     {#if expanded}
       <rect class:hide={expanded}
             bind:this={rectElement}
-            x=0
+            x={ageScale(minAge)}
             y={tempScale(maxTemp)}
-            width={$width}
+            width={ageScale(maxAge) - ageScale(minAge)}
             height={tempScale(minTemp) - tempScale(maxTemp)}
             on:click={() => animate(false)} />
     {/if}
