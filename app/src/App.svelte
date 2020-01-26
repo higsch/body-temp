@@ -1,8 +1,9 @@
 <script>
 	import * as d3 from 'd3';
 
-	import { width, height } from './stores.js';
+	import { width, height, numExpandedIndividuals } from './stores.js';
 	import Defs from './components/Defs.svelte';
+	import Axes from './components/Axes.svelte';
 	import Individual from './components/Individual.svelte';
 
 	let data = [];
@@ -14,7 +15,8 @@
 				individual: +d.ANON_ID,
 				age: +d.age_years,
 				temp: +d.temp_C,
-				diagnosis: d.primary_dx
+				diagnosis: d.primary_dx,
+				sex: d.GENDER
 			};
 		}).then((res) => {
 			let tmp = d3.nest()
@@ -26,18 +28,38 @@
 
 	load();
 
+	const sexScale = d3.scaleOrdinal()
+										.domain(['Female', 'Male'])
+										.range(['#D84797', '#39A9DB']);
+
 	// Adjust scales to dimensions
 	$: individualRowScale = d3.scaleLinear()
 			.domain([0, data.length])
-			.range([-$width / data.length / 2, $width + $width / data.length / 2]);
+			.range([$width / 100, $width]);
 
   $: ageScale = d3.scaleLinear()
-    .domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.age)))))
-    .range([0, $width]);
+			.domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.age)))))
+			.range([0.03 * $width, 0.97 * $width]);
 
 	$: tempScale = d3.scaleLinear()
-    .domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.temp)))))
-    .range([$height * 0.9, $height / 2]);
+			.domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.temp)))))
+			.range([$height * 0.8, $height * 0.35]);
+		
+	$: diseaseColorScale = d3.scaleOrdinal()
+			.domain(['E78', 'I10', 'J01', 'J06', 'M25', 'M54', 'R05', 'R10'])
+			// 'E78' lipidemias,
+			// 'I10' hypertension,
+			// 'J01' sinusitis,
+			// 'J06' respiratory infection,
+			// 'M25' joint disorder,
+			// 'M54' back pain,
+			// 'R05' cough,
+			// 'R10' abdominal and pelvic pain
+			.range(['#086375', '#086375', '#852F5A', '#852F5A', '#D7B377', '#EF8354', '#852F5A', '#EF8354']);
+	
+	$: diseaseGroupScale = d3.scaleOrdinal()
+			.domain(diseaseColorScale.domain())
+			.range([0, 0, 1, 1, 2, 3, 1, 3].map((d, _, arr) => (0.95 * $height - tempScale.range()[0]) * (d + 1) / 4 + tempScale.range()[0]));
 </script>
 
 <div class="wrapper">
@@ -52,12 +74,21 @@
 				 width={$width}
 				 height={$height}>
 			<Defs />
+			<Axes ageScale={ageScale}
+						tempScale={tempScale}
+						diseaseGroupScale={diseaseGroupScale}
+						show={$numExpandedIndividuals > 0} />
 			{#each data as individual, i}
-				<Individual x={individualRowScale(i)}
-										y={Math.random() * $width / 10}
-										data={individual.values}
-										ageScale={ageScale}
-										tempScale={tempScale} />
+				{#if ($width > 600 || i % 2 === 0)}
+					<Individual x={individualRowScale(i)}
+											y={Math.random() * $height / 10}
+											data={individual.values}
+											sexScale={sexScale}
+											ageScale={ageScale}
+											tempScale={tempScale}
+											diseaseColorScale={diseaseColorScale}
+											diseaseGroupScale={diseaseGroupScale} />
+				{/if}
 			{/each}
 		</svg>
 	</div>

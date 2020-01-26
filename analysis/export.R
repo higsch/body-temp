@@ -12,6 +12,7 @@ data %>%
 
 # plot temperature for individuals
 ids <- num_measurements$ANON_ID[c(1:5, 7, 11, 14, 18)]
+ids <- num_measurements$ANON_ID[1:20]
 
 data %>%
   filter(ANON_ID %in% ids) -> data_export
