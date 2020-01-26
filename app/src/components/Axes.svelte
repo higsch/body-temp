@@ -27,8 +27,8 @@
       <text class="label" transform="translate(15 {tempScale(37)}) rotate(-90)">Temperature (°C)</text>
       {#each tempTicks as tick}
         <g transform="translate(0 {tempScale(tick)})">
-          <line class:faint={tick !== 37} x1=25 y1=0 x2={$width} y2=0 />
-          <text x=25 y=-4>{tick.toPrecision(3)}</text>
+          <line class:faint={tick !== 37} x1=55 y1=0 x2={$width} y2=0 />
+          <text x=25 y=4>{tick.toPrecision(3)}</text>
         </g>
       {/each}
     </g>

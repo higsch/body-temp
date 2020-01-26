@@ -51,11 +51,13 @@
 </script>
 
 <div class="wrapper">
-	<h1>Same same but different</h1>
+	<div class="headline">
+		<h1>Same same but different</h1>
+	</div>
 	<div class="explanations">
 		It was the German physician Carl Reinhold August Wunderlich, who measured the temperatures of 25,000 patients leading to the gold standard 37 degrees. The average human body temperature. Until today we believe that this is true.
 		In early 2020 a comprehensive study with temperature data points spanning the last 150 years appeared in the scientific journal <a href="https://elifesciences.org/articles/49555">eLife</a>. Surprisingly, average body temperatures are falling over past decades. The authors speculate that one reason might be less infections.<br />
-		Apart from that each individual might have her/his own base temperature. Explore it yourself by clicking on the bodies.
+		Apart from that each individual might have her/his own base temperature. Explore it yourself by clicking on <span style="color: {sexScale('Female')};">female</span> or <span style="color: {sexScale('Male')};">male</span> bodies.
 	</div>
 	<div class="svg-wrapper" bind:clientWidth={$width} bind:clientHeight={$height}>
 		<svg xmlns="http://www.w3.org/2000/svg"
@@ -79,6 +81,7 @@
 			{/each}
 		</svg>
 	</div>
+	<div class="disclaimer">Higsch Data Visuals  |  <a href="https://www.linkedin.com/in/matthias-stahl/">Matthias Stahl</a>  |  2020</div>
 </div>
 
 <style>
@@ -89,9 +92,15 @@
 		height: 100%;
 	}
 
-	h1 {
+	.headline {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
 		width: 95%;
 		margin: 1rem auto 0 auto;
+	}
+
+	h1 {
 		font-family: 'Source Sans Pro', sans-serif;
 		font-size: 3rem;
 		font-weight: 200;
@@ -124,5 +133,14 @@
 	svg {
 		width: 100%;
 		height: 100%;
+	}
+
+	.disclaimer {
+		width: 100%;
+		padding: 1rem;
+		text-align: center;
+		font-family: 'Source Sans Pro', sans-serif;
+		font-size: 0.7rem;
+		font-weight: 200;
 	}
 </style>
