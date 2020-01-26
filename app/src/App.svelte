@@ -44,22 +44,10 @@
 	$: tempScale = d3.scaleLinear()
 			.domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.temp)))))
 			.range([$height * 0.8, $height * 0.35]);
-		
-	$: diseaseColorScale = d3.scaleOrdinal()
-			.domain(['E78', 'I10', 'J01', 'J06', 'M25', 'M54', 'R05', 'R10'])
-			// 'E78' lipidemias,
-			// 'I10' hypertension,
-			// 'J01' sinusitis,
-			// 'J06' respiratory infection,
-			// 'M25' joint disorder,
-			// 'M54' back pain,
-			// 'R05' cough,
-			// 'R10' abdominal and pelvic pain
-			.range(['#086375', '#086375', '#852F5A', '#852F5A', '#D7B377', '#EF8354', '#852F5A', '#EF8354']);
 	
 	$: diseaseGroupScale = d3.scaleOrdinal()
-			.domain(diseaseColorScale.domain())
-			.range([0, 0, 1, 1, 2, 3, 1, 3].map((d, _, arr) => (0.95 * $height - tempScale.range()[0]) * (d + 1) / 4 + tempScale.range()[0]));
+			.domain(['J01', 'J06', 'R05'])
+			.range([0, 0, 0].map((d, _, arr) => (0.95 * $height - tempScale.range()[0]) * (d + 1) / 1 + tempScale.range()[0]));
 </script>
 
 <div class="wrapper">
@@ -86,7 +74,6 @@
 											sexScale={sexScale}
 											ageScale={ageScale}
 											tempScale={tempScale}
-											diseaseColorScale={diseaseColorScale}
 											diseaseGroupScale={diseaseGroupScale} />
 				{/if}
 			{/each}

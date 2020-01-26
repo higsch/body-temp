@@ -11,7 +11,6 @@
   export let sexScale;
   export let ageScale;
   export let tempScale;
-  export let diseaseColorScale;
   export let diseaseGroupScale;
   
   let expanded = false;
@@ -77,12 +76,12 @@
 
     // Load the disease circles
     d3.select(diseasesElement).selectAll('circle')
-      .data(data.filter((d) => diseaseColorScale.domain().includes(d.diagnosis)))
+      .data(data.filter((d) => diseaseGroupScale.domain().includes(d.diagnosis)))
       .join('circle')
         .attr('cx', (d) => ageScale(d.age))
         .attr('cy', (d) => tempScale(d.temp))
         .attr('r', 0)
-        .attr('fill', (d) => diseaseColorScale(d.diagnosis))
+        .attr('fill', '#7F7EFF')
         .attr('fill-opacity', 0.4);
   });
 
@@ -96,7 +95,7 @@
   $: maxTemp = d3.max(data.map((d) => d.temp));
   $: minTemp = d3.min(data.map((d) => d.temp));
 
-  $: diseaseRadius = (d3.max(diseaseGroupScale.range()) - d3.min(diseaseGroupScale.range())) / 4 / 2;
+  $: diseaseRadius = Math.min($width, $height) / 100;
 
   $: animate(expanded);
 </script>
