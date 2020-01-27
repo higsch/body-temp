@@ -2,6 +2,8 @@
   import * as d3 from 'd3';
 
   import { width, height, numExpandedIndividuals } from './stores.js';
+
+  import CookieBanner from './CookieBanner.svelte';
   import Defs from './components/Defs.svelte';
   import Axes from './components/Axes.svelte';
   import Individual from './components/Individual.svelte';
@@ -49,11 +51,7 @@
 </script>
 
 <div class="wrapper">
-  <div id="cookies-eu-banner">
-    Would be great to know where you all come from. So do you accept the use of cookies for Google Analytics?
-    <button id="cookies-eu-reject">Reject</button>
-    <button id="cookies-eu-accept">Accept</button>
-  </div>
+  <CookieBanner />
   <div class="headline">
     <h1>Human signatures</h1>
   </div>
@@ -91,25 +89,6 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-  }
-
-  #cookies-eu-banner {
-    /* position: absolute; */
-    bottom: 0;
-    display: none;
-    width: 100%;
-    padding: 1rem;
-    color: white;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 1rem;
-    background-color: var(--purple);
-  }
-
-  #cookies-eu-banner button {
-    margin: 0 0.1rem;
-    padding: 0.1rem;
-    font-size: 0.8rem;
-    border-radius: 0.2rem;
   }
 
   .headline {
