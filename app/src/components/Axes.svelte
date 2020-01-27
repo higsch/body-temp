@@ -5,7 +5,6 @@
 
   export let ageScale;
   export let tempScale;
-  export let diseaseGroupScale;
   export let show = false;
 
   const ageTicks = [20, 30, 40, 50, 60, 70];
@@ -31,9 +30,6 @@
           <text x=25 y=4>{tick.toPrecision(3)}</text>
         </g>
       {/each}
-    </g>
-    <g class="axis-diagnosis">
-      <text class="label" transform="translate(15 {diseaseGroupScale('J01')}) rotate(-90)">Got a cold</text>
     </g>
   </g>
 {/if}

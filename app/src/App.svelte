@@ -32,6 +32,8 @@
 										.domain(['Female', 'Male'])
 										.range(['#D84797', '#39A9DB']);
 
+	const diagnosesToShow = ['J01', 'J06', 'R05'];
+
 	// Adjust scales to dimensions
 	$: individualRowScale = d3.scaleLinear()
 			.domain([0, data.length])
@@ -43,21 +45,16 @@
 
 	$: tempScale = d3.scaleLinear()
 			.domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.temp)))))
-			.range([$height * 0.8, $height * 0.35]);
-	
-	$: diseaseGroupScale = d3.scaleOrdinal()
-			.domain(['J01', 'J06', 'R05'])
-			.range([0, 0, 0].map((d, _, arr) => (0.95 * $height - tempScale.range()[0]) * (d + 1) / 1 + tempScale.range()[0]));
+			.range([$height * 0.95, $height * 0.35]);
 </script>
 
 <div class="wrapper">
 	<div class="headline">
-		<h1>Same same but different</h1>
+		<h1>Human signatures</h1>
 	</div>
 	<div class="explanations">
-		It was the German physician Carl Reinhold August Wunderlich, who measured the temperatures of 25,000 patients leading to the gold standard 37 degrees. The average human body temperature. Until today we believe that this is true.
-		In early 2020 a comprehensive study with temperature data points spanning the last 150 years appeared in the scientific journal <a href="https://elifesciences.org/articles/49555">eLife</a>. Surprisingly, average body temperatures are falling over past decades. The authors speculate that one reason might be less infections.<br />
-		Apart from that each individual might have her/his own base temperature. Explore it yourself by clicking on <span style="color: {sexScale('Female')};">female</span> or <span style="color: {sexScale('Male')};">male</span> bodies.
+		We are different – and our body temperature is as well.<br />It was the German physician Carl Reinhold August Wunderlich, who measured the temperatures of 25,000 patients leading to the accepted standard 37 degrees. The average human body temperature. Until today we believe that this is true.
+		In early 2020 a comprehensive study with temperature data points spanning the last 150 years appeared in the scientific journal <a href="https://elifesciences.org/articles/49555">eLife</a>. Surprisingly, average body temperatures are constantly decreasing over past decades. Apart from that each individual has her and his own temperature profile over time.<br /><br />Explore them yourself by clicking on <span style="color: {sexScale('Female')};">female</span> or <span style="color: {sexScale('Male')};">male</span> bodies from the eLife study. A blue stamp <div class="dot"></div> denotes a cold.
 	</div>
 	<div class="svg-wrapper" bind:clientWidth={$width} bind:clientHeight={$height}>
 		<svg xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +63,6 @@
 			<Defs />
 			<Axes ageScale={ageScale}
 						tempScale={tempScale}
-						diseaseGroupScale={diseaseGroupScale}
 						show={$numExpandedIndividuals > 0} />
 			{#each data as individual, i}
 				{#if ($width > 600 || i % 2 === 0)}
@@ -76,7 +72,7 @@
 											sexScale={sexScale}
 											ageScale={ageScale}
 											tempScale={tempScale}
-											diseaseGroupScale={diseaseGroupScale} />
+											diagnosesToShow={diagnosesToShow} />
 				{/if}
 			{/each}
 		</svg>
@@ -122,6 +118,14 @@
 		.explanations {
 			column-count: 1;
 		}
+	}
+
+	.dot {
+		display: inline-block;
+		width: 0.7rem;
+		height: 0.7rem;
+		background: #5BC0EB;
+		border-radius: 50%;
 	}
 
 	.svg-wrapper {

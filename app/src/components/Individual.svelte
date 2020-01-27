@@ -11,10 +11,11 @@
   export let sexScale;
   export let ageScale;
   export let tempScale;
-  export let diseaseGroupScale;
+  export let diagnosesToShow = [];
   
   let expanded = false;
-  let humanElement, lineElement, lineBlurElement, rectElement, diseasesElement;
+  let isBlurred = false;
+  let parentElement, humanElement, lineElement, lineBlurElement, rectElement, diseasesElement;
   let humanLength, lineLength;
   let color = 'white';
 
@@ -29,27 +30,37 @@
 
     d3.select(lineBlurElement)
       .transition().duration(1000)
-        .attr('stroke-dashoffset', expanded ? 0 : -lineLength);
+        .attr('stroke-dashoffset', expanded ? 0 : -lineLength)
+        .transition().duration(1)
+          .attr('stroke-opacity', 0.6);
 
     d3.select(lineElement)
       .transition().duration(1000)
         .attr('stroke-dashoffset', expanded ? 0 : -lineLength)
-        .on(expanded ? 'end' : 'start', expanded ? showDiseases : hideDiseases);
+        .on(expanded ? 'end' : 'start', expanded ? showDiseases : hideDiseases)
+        .transition().duration(1)
+          .attr('stroke-opacity', 1);
+
+    if (expanded && !isBlurred) {
+      d3.select(parentElement).selectAll('path.to-blur')
+        .transition().duration(5000).delay(5000)
+        .attr('stroke-opacity', 0.3)
+        .on('end', () => isBlurred = true);
+    } else if (!expanded || expanded && isBlurred) {
+      isBlurred = false;
+    }
   }
 
   function showDiseases() {
     d3.select(diseasesElement).selectAll('circle')
       .transition().duration(500)
-        .attr('r', diseaseRadius)
-        .transition().duration(500)
-          .attr('cy', (d) => diseaseGroupScale(d.diagnosis));
+        .attr('r', diseaseRadius);
   }
 
   function hideDiseases() {
     d3.select(diseasesElement).selectAll('circle')
       .transition().duration(500)
-        .attr('r', 0)
-        .attr('cy', (d) => tempScale(d.temp));
+        .attr('r', 0);
   }
 
   onMount(() => {
@@ -69,20 +80,23 @@
           .attr('fill-opacity', 0.4);
 
     d3.select(lineBlurElement)
-      .attr('stroke-dashoffset', -lineLength);
+      .attr('stroke-dashoffset', -lineLength)
+      .attr('stroke-opacity', 0.6);
 
     d3.select(lineElement)
-      .attr('stroke-dashoffset', -lineLength);
+      .attr('stroke-dashoffset', -lineLength)
+      .attr('stroke-opacity', 1);
 
     // Load the disease circles
     d3.select(diseasesElement).selectAll('circle')
-      .data(data.filter((d) => diseaseGroupScale.domain().includes(d.diagnosis)))
+      .data(data.filter((d) => diagnosesToShow.includes(d.diagnosis)))
       .join('circle')
+        .attr('class', 'to-blur')
         .attr('cx', (d) => ageScale(d.age))
         .attr('cy', (d) => tempScale(d.temp))
         .attr('r', 0)
-        .attr('fill', '#7F7EFF')
-        .attr('fill-opacity', 0.4);
+        .attr('fill', '#5BC0EB')
+        .attr('fill-opacity', 0.6);
   });
 
   $: line = d3.line()
@@ -100,7 +114,7 @@
   $: animate(expanded);
 </script>
 
-<g class="individual">
+<g class="individual" bind:this={parentElement}>
   <g class="human-icon" transform="translate({x} {y}) scale(0.6)">
     <path class="human"
           bind:this={humanElement}
@@ -110,19 +124,19 @@
           stroke-dasharray="{humanLength} {humanLength}"
           on:click={() => expanded = !expanded} />
   </g>
+  <g class="diseases"
+     bind:this={diseasesElement}>
+  </g>
   <g class="temperature-line">
-    <path class="line-blur"
+    <path class="line-blur to-blur"
           bind:this={lineBlurElement}
           d={line(data)}
           stroke={color}
           stroke-dasharray="{lineLength} {lineLength}" />
-    <path class="line"
+    <path class="line to-blur"
           bind:this={lineElement}
           d={line(data)}
           stroke-dasharray="{lineLength} {lineLength}" />
-  </g>
-  <g class="diseases"
-     bind:this={diseasesElement}>
   </g>
   <g class="hover-rect">
     {#if expanded}
@@ -160,7 +174,6 @@
 
   path.line-blur {
     stroke-width: 0.3vmin;
-    stroke-opacity: 0.6;
     filter: url(#filter-blur);
   }
 
