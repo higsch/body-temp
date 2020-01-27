@@ -52,9 +52,7 @@
 
 <div class="wrapper">
   <CookieBanner />
-  <div class="headline">
-    <h1>Human signatures</h1>
-  </div>
+  <h1>Human signatures</h1>
   <div class="explanations">
     We are different – and our body temperature is as well.<br />It was the German physician Carl Reinhold August Wunderlich, who measured the temperatures of 25,000 patients leading to the accepted standard 37 degrees. The average human body temperature. Until today we believe that this is true.
     In early 2020 a comprehensive study with temperature data points spanning the last 150 years appeared in the scientific journal <a href="https://elifesciences.org/articles/49555">eLife</a>. Surprisingly, average body temperatures are constantly decreasing over past decades. Apart from that each individual has her and his own temperature profile over time.<br /><br />Explore them yourself by clicking on <span style="color: {sexScale('Female')};">female</span> or <span style="color: {sexScale('Male')};">male</span> bodies from the eLife study. A blue stamp <div class="dot"></div> denotes a cold.
@@ -91,15 +89,9 @@
     height: 100%;
   }
 
-  .headline {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+  h1 {
     width: 95%;
     margin: 1rem auto 0 auto;
-  }
-
-  h1 {
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 3rem;
     font-weight: 200;

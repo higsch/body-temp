@@ -7,6 +7,7 @@
 <style>
   #cookies-eu-banner {
     position: absolute;
+    z-index: 1000;
     bottom: 0;
     display: none;
     width: 100%;
@@ -28,4 +29,8 @@
     border: none;
     outline: none;
   }
+
+  #cookies-eu-banner button:hover {
+    cursor: pointer;
+  } 
 </style>
