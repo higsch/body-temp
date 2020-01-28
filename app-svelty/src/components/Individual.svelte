@@ -5,7 +5,7 @@
   import { width, height, numExpandedIndividuals } from '../stores.js';
 
   import { expandable } from './expandable.js';
-  import { fillable } from './fillable.js';
+  import { makeOpaque } from './makeOpaque.js';
   import { toggledisease } from './toggledisease.js';
 
   export let x;
@@ -40,7 +40,7 @@
 <g class="individual">
   <g class="human-icon" transform="translate({x} {y}) scale(0.6)">
     <path class="human"
-          use:fillable={{duration: 1000}}
+          in:makeOpaque={{duration: 1000}}
           use:expandable={{expanded: expanded, direction: true, duration: 1000}}
           d={human}
           fill={color}
@@ -86,11 +86,11 @@
     stroke: var(--purple);
     stroke-width: calc(1.6 * 0.2vmin);
     filter: url(#point-light);
+    fill-opacity: 0.4;
   }
 
   path.line, path.line-blur {
     fill: none;
-    fill-opacity: 0;
   }
 
   path.line {
