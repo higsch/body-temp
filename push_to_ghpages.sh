@@ -1,1 +1,1 @@
-git subtree push --prefix app/public origin gh-pages
+git subtree push --prefix app-svelty/public origin gh-pages
