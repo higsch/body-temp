@@ -15,7 +15,6 @@ export function toggledisease(node, { radius, duration = 300, delay = 1000 }) {
 
   return {
     update({ expanded }) {
-      console.log(expanded)
       radiusTween.update(_ => expanded ? radius : 0);
     },
     destroy() {

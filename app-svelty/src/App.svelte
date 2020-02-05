@@ -9,6 +9,7 @@
   import Individual from './components/Individual.svelte';
 
   let data = [];
+  let tempScale;
 
   // Load the data
   const load = () => {
@@ -45,7 +46,7 @@
       .domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.age)))))
       .range([0.03 * $width, 0.97 * $width]);
 
-  $: tempScale = d3.scaleLinear()
+  $: if ($height > 0) tempScale = d3.scaleLinear()
       .domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.temp)))))
       .range([$height * 0.95, $height * 0.35]);
 </script>
