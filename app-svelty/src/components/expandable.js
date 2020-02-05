@@ -9,6 +9,7 @@ export function expandable(node, { expanded, direction = true, duration = 1000})
   let offset, opacity;
 
   const length = node.getTotalLength();
+
   node.style.strokeDasharray = `${length}, ${length}`;
   const currOffset = direction ? 0 : -length;
   offset = tweened(currOffset, {

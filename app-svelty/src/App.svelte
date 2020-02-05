@@ -9,7 +9,6 @@
   import Individual from './components/Individual.svelte';
 
   let data = [];
-  let tempScale;
 
   // Load the data
   const load = () => {
@@ -46,7 +45,7 @@
       .domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.age)))))
       .range([0.03 * $width, 0.97 * $width]);
 
-  $: if ($height > 0) tempScale = d3.scaleLinear()
+  $: tempScale = d3.scaleLinear()
       .domain(d3.extent([].concat(...data.map((d) => d.values.map((d) => d.temp)))))
       .range([$height * 0.95, $height * 0.35]);
 </script>
@@ -59,25 +58,27 @@
     In early 2020 a comprehensive study with temperature data points spanning the last 150 years appeared in the scientific journal <a href="https://elifesciences.org/articles/49555">eLife</a>. Surprisingly, average body temperatures are constantly decreasing over past decades. Apart from that each individual has her and his own temperature profile over time.<br /><br />Explore them yourself by clicking on <span style="color: {sexScale('Female')};">female</span> or <span style="color: {sexScale('Male')};">male</span> bodies from the eLife study. A blue stamp <div class="dot"></div> denotes a cold.
   </div>
   <div class="svg-wrapper" bind:clientWidth={$width} bind:clientHeight={$height}>
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width={$width}
-         height={$height}>
-      <Defs />
-      <Axes ageScale={ageScale}
-            tempScale={tempScale}
-            show={$numExpandedIndividuals > 0} />
-      {#each data as individual, i}
-        {#if ($width > 600 || i % 2 === 0)}
-          <Individual x={individualRowScale(i)}
-                      y={Math.random() * $height / 10}
-                      data={individual.values}
-                      sexScale={sexScale}
-                      ageScale={ageScale}
-                      tempScale={tempScale}
-                      diagnosesToShow={diagnosesToShow} />
-        {/if}
-      {/each}
-    </svg>
+    {#if ($width > 0 && $height > 0)}
+      <svg xmlns="http://www.w3.org/2000/svg"
+          width={$width}
+          height={$height}>
+        <Defs />
+        <Axes ageScale={ageScale}
+              tempScale={tempScale}
+              show={$numExpandedIndividuals > 0} />
+        {#each data as individual, i}
+          {#if ($width > 600 || i % 2 === 0)}
+            <Individual x={individualRowScale(i)}
+                        y={Math.random() * $height / 10}
+                        data={individual.values}
+                        sexScale={sexScale}
+                        ageScale={ageScale}
+                        tempScale={tempScale}
+                        diagnosesToShow={diagnosesToShow} />
+          {/if}
+        {/each}
+      </svg>
+    {/if}
   </div>
   <div class="disclaimer">Higsch Data Visuals  |  <a href="https://www.linkedin.com/in/matthias-stahl/">Matthias Stahl</a>  |  2020</div>
 </div>

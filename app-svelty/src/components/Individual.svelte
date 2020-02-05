@@ -38,43 +38,45 @@
 </script>
 
 <g class="individual">
-  <g class="human-icon" transform="translate({x} {y}) scale(0.6)">
-    <path class="human"
-          in:makeOpaque={{duration: 1000}}
-          use:expandable={{expanded: expanded, direction: true, duration: 1000}}
-          d={human}
-          fill={color}
-          on:click={() => expanded = !expanded} />
-  </g>
-  <g class="diagnoses">
-    {#each data.filter((d) => diagnosesToShow.includes(d.diagnosis)) as { age, temp }}
-      <circle class="diagnosis-circle"
-              cx={ageScale(age)}
-              cy={tempScale(temp)}
-              r=0
-              use:toggledisease={{expanded, radius: diseaseRadius, duration: 1000}} />
-    {/each}
-  </g>
-  <g class="temperature-line">
-    <path class="line-blur to-blur"
-          use:expandable={{expanded, direction: false}}
-          d={line(data)}
-          stroke={color}/>
-    <path class="line to-blur"
-          use:expandable={{expanded, direction: false}}
-          d={line(data)} />
-  </g>
-  <g class="hover-rect">
-    {#if expanded}
-      <rect class:hide={expanded}
-            bind:this={rectElement}
-            x={ageScale(minAge)}
-            y={tempScale(maxTemp)}
-            width={ageScale(maxAge) - ageScale(minAge)}
-            height={tempScale(minTemp) - tempScale(maxTemp)}
-            on:click={() => expanded = false} />
-    {/if}
-  </g>
+  {#if $width}
+    <g class="human-icon" transform="translate({x} {y}) scale(0.6)">
+      <path class="human"
+            in:makeOpaque={{duration: 1000}}
+            use:expandable={{expanded: expanded, direction: true, duration: 1000}}
+            d={human}
+            fill={color}
+            on:click={() => expanded = !expanded} />
+    </g>
+    <g class="diagnoses">
+      {#each data.filter((d) => diagnosesToShow.includes(d.diagnosis)) as { age, temp }}
+        <circle class="diagnosis-circle"
+                cx={ageScale(age)}
+                cy={tempScale(temp)}
+                r=0
+                use:toggledisease={{expanded, radius: diseaseRadius, duration: 1000}} />
+      {/each}
+    </g>
+    <g class="temperature-line">
+      <path class="line-blur to-blur"
+            use:expandable={{expanded, direction: false}}
+            d={line(data)}
+            stroke={color}/>
+      <path class="line to-blur"
+            use:expandable={{expanded, direction: false}}
+            d={line(data)} />
+    </g>
+    <g class="hover-rect">
+      {#if expanded}
+        <rect class:hide={expanded}
+              bind:this={rectElement}
+              x={ageScale(minAge)}
+              y={tempScale(maxTemp)}
+              width={ageScale(maxAge) - ageScale(minAge)}
+              height={tempScale(minTemp) - tempScale(maxTemp)}
+              on:click={() => expanded = false} />
+      {/if}
+    </g>
+  {/if}
 </g>
 
 <style>
