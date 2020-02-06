@@ -4,9 +4,10 @@
   import human from '../human.js';
   import { width, height, numExpandedIndividuals } from '../stores.js';
 
-  import { expandable } from './expandable.js';
-  import { makeOpaque } from './makeOpaque.js';
-  import { toggledisease } from './toggledisease.js';
+  import { move } from './move.js';
+  import { makeOpaqueFill } from './opacity.js';
+  import { togglediagnosis } from './togglediagnosis.js';
+  import { transparentStroke } from './transparentStroke.js';
 
   export let x;
   export let y;
@@ -40,30 +41,40 @@
 <g class="individual">
   {#if $width}
     <g class="human-icon" transform="translate({x} {y}) scale(0.6)">
-      <path class="human"
-            in:makeOpaque={{duration: 1000}}
-            use:expandable={{expanded: expanded, direction: true, duration: 1000}}
+      <path class="human fill"
+            in:makeOpaqueFill={{duration: 1000}}
             d={human}
             fill={color}
             on:click={() => expanded = !expanded} />
+      {#if !expanded}
+        <path class="human stroke"
+              transition:move
+              d={human} />
+      {/if}
     </g>
     <g class="diagnoses">
-      {#each data.filter((d) => diagnosesToShow.includes(d.diagnosis)) as { age, temp }}
-        <circle class="diagnosis-circle"
-                cx={ageScale(age)}
-                cy={tempScale(temp)}
-                r=0
-                use:toggledisease={{expanded, radius: diseaseRadius, duration: 1000}} />
-      {/each}
+      {#if expanded}
+        {#each data.filter((d) => diagnosesToShow.includes(d.diagnosis)) as { age, temp }}
+          <circle class="diagnosis-circle"
+                  cx={ageScale(age)}
+                  cy={tempScale(temp)}
+                  r=0
+                  transition:togglediagnosis={{radius: diseaseRadius}} />
+        {/each}
+      {/if}
     </g>
     <g class="temperature-line">
-      <path class="line-blur to-blur"
-            use:expandable={{expanded, direction: false}}
-            d={line(data)}
-            stroke={color}/>
-      <path class="line to-blur"
-            use:expandable={{expanded, direction: false}}
-            d={line(data)} />
+      {#if expanded}
+        <path class="line-blur to-blur"
+              d={line(data)}
+              stroke={color}
+              transition:move
+              use:transparentStroke={{duration: 3000, delay: 5000}} />
+        <path class="line to-blur"
+              d={line(data)}
+              transition:move
+              use:transparentStroke={{duration: 3000, delay: 5000}} />
+      {/if}
     </g>
     <g class="hover-rect">
       {#if expanded}
@@ -84,11 +95,16 @@
     cursor: pointer;
   }
 
-  path.human {
-    stroke: var(--purple);
-    stroke-width: calc(1.6 * 0.2vmin);
+  path.human.fill {
+    stroke: none;
     filter: url(#point-light);
     fill-opacity: 0.4;
+  }
+
+  path.human.stroke {
+    stroke: var(--purple);
+    stroke-width: calc(1.6 * 0.2vmin);
+    fill: none;
   }
 
   path.line, path.line-blur {
